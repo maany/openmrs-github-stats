@@ -7,10 +7,15 @@ page=1
 result=$(curl --user "$user":"$password" -X GET "https://api.github.com/orgs/openmrs/repos?type=all&page=$page&per_page=100&sort=full_name" | jq .[].name)
 arr=($result)
 number_of_results=${#arr[*]}
-echo ${arr}
 echo "$number_of_results"
 for (( i=0; i<${number_of_results}; i++ ));
 do
-    echo ${arr[$i]}
-    # obtain contribution details
+    repo_name=${arr[$i]}
+    repo_name="${repo_name:1:-1}"
+    echo "Finding number of weekly commits for $repo_name";
+    # obtain number of commits
+    commits_url="https://api.github.com/repos/openmrs"
+    commits_url="$commits_url/${repo_name}/stats/participation"
+    curl --user ${user}:${password} -X GET $commits_url
+
 done
