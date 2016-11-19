@@ -16,11 +16,23 @@ do
     # obtain number of commits
     echo "Finding number of weekly commits for $repo_name";
     commits_url="https://api.github.com/repos/openmrs"
-    commits_url="$commits_url/${repo_name}/stats/participation"
-    #curl --user ${user}:${password} -X GET $commits_url
+    commits_url="$commits_url/${repo_name}/stats/commit_activity"
+    weekly_commits_string=$(curl --user ${user}:${password} -X GET $commits_url | jq .[].total)
+    weekly_commits=($weekly_commits_string)
+    total_commits_year=0
+    for (( j=0; j<${#weekly_commits[*]}; j++ ))
+    do
+      total_commits_year=$(( ${total_commits_year}+${weekly_commits[${j}]} ))
+    done
+    average_monthly_commits=$(( ${total_commits_year}/12 ))
 
     #find pull request details
     echo "Finding number of pull requests for $repo_name"
     pull_request_count=$( curl --user ${user}:${password} -X GET "https://api.github.com/repos/openmrs/${repo_name}/pulls?state=all&page=1&per_page=100" | jq .[].id | wc -l)
-    echo "Number of pull requests : $pull_request_count"
+    #echo "Number of pull requests : $pull_request_count"
+    
+    #group number of commits by month
+
+    #group number of pull requests by month
+
 done
