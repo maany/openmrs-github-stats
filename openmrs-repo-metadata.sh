@@ -12,10 +12,15 @@ for (( i=0; i<${number_of_results}; i++ ));
 do
     repo_name=${repos[$i]}
     repo_name="${repo_name:1:-1}"
-    echo "Finding number of weekly commits for $repo_name";
+
     # obtain number of commits
+    echo "Finding number of weekly commits for $repo_name";
     commits_url="https://api.github.com/repos/openmrs"
     commits_url="$commits_url/${repo_name}/stats/participation"
-    curl --user ${user}:${password} -X GET $commits_url
+    #curl --user ${user}:${password} -X GET $commits_url
 
+    #find pull request details
+    echo "Finding number of pull requests for $repo_name"
+    pull_request_count=$( curl --user ${user}:${password} -X GET "https://api.github.com/repos/openmrs/${repo_name}/pulls?state=all&page=1&per_page=100" | jq .[].id | wc -l)
+    echo "Number of pull requests : $pull_request_count"
 done
