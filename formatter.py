@@ -19,4 +19,7 @@ for date in dates_list:
     if rd.years ==0 and rd.months>=0:
         pr_list[rd.months] += 1
     #print "{0.years} years and {0.months} months".format(rd)
-print(pr_list)
+if not pr_list :
+    print("[]")
+else :
+    print(pr_list)
