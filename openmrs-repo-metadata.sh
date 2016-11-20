@@ -13,7 +13,9 @@ do
   result=$(curl --user "$user":"$password" -X GET "https://api.github.com/orgs/openmrs/repos?type=all&page=$page&per_page=100&sort=full_name" | jq .[].name)
   repos=($result)
   number_of_results=${#repos[*]}
-  echo "$number_of_results"
+  echo "********************************************************"
+  echo "Number of Results for Page $page are $number_of_results"
+  echo "********************************************************"
   for (( i=0; i<${number_of_results}; i++ ));
   do
       if [ $first_entry == 1 ];then
@@ -52,7 +54,7 @@ do
       #group number of pull requests by month
       printf "  }" >> ${OUTPUT_FILE}
     done
-    if [ $(( ${number_of_results} -100 )) - le 0 ]; then
+    if [ $(( ${number_of_results} -100 )) -lt 0 ]; then
       break
     fi
     page=$(( ${page}+1 ))
